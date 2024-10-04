@@ -105,7 +105,9 @@ def custom_field_test_value(custom_field)
   end
 end
 
-['Acme', 'Smith Holdings', "Mom's Real Estate", 'Homer Inc.', "Howl's Magic Real Estate"].each do |client_name|
+CustomField.destroy_all
+
+['Acme', 'Smith Holdings', "Mom's Real Estate", 'Homer Inc.', "Howl's Magic Real Estate", 'ZZ Real Estate'].each do |client_name|
   client = Client.find_or_create_by!(name: client_name)
   
   # since these are randomly picked, find_or_create_by! is not idempotent

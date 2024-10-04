@@ -6,7 +6,7 @@ class BuildingsController < ApplicationController
     # in a real app I would likely use a pagination gem
     page = params[:page].to_i || 1
     per_page = 10
-    @buildings = Building.order(id: :asc).offset((page - 1) * per_page).limit(per_page)
+    @buildings = Building.order(id: :desc).offset((page - 1) * per_page).limit(per_page)
     respond_to do |format|
       format.json do
         buildings_hashes = @buildings.map do |building|
@@ -17,6 +17,8 @@ class BuildingsController < ApplicationController
             id: building.id,
             client_name: building.client.name,
             address: building.address,
+            zipcode: building.zipcode,
+            state_code: building.state_code,
             **cf_hash
           }
         end
@@ -41,16 +43,30 @@ class BuildingsController < ApplicationController
 
   # POST /buildings or /buildings.json
   def create
-    @building = Building.new(building_params)
-
-    respond_to do |format|
-      if @building.save
-        format.html { redirect_to @building, notice: "Building was successfully created." }
-        format.json { render :show, status: :created, location: @building }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @building.errors, status: :unprocessable_entity }
+    @client = Client.find_by(name: building_create_params[:client_name])
+    ActiveRecord::Base.transaction do
+      @building = Building.new({
+        address: building_create_params[:address],
+        state_code: building_create_params[:state_code],
+        zipcode: building_create_params[:zipcode],
+        client_id: @client.id
+      })
+      @building.save
+      building_create_params.except(:address, :state_code, :zipcode, :client_name).each do |name, value|
+        cf = @client.custom_fields.where(name: name).take
+        cfv = CustomFieldValue.new({
+          custom_field_id: cf.id,
+          building_id: @building.id,
+          value: value
+        })
+        cfv.save
       end
+
+    end
+    if @building.persisted?
+      render json: { status: :success, building: @building }
+    else
+      render json: { errors: @building.errors, status: :unprocessable_entity }
     end
   end
 
@@ -82,5 +98,9 @@ class BuildingsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def building_params
       params.require(:building).permit!.except(:id, :client_name)
+    end
+
+    def building_create_params
+      params.require(:building).permit!.except(:id)
     end
 end

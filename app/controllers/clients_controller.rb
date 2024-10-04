@@ -4,6 +4,7 @@ class ClientsController < ApplicationController
   # GET /clients or /clients.json
   def index
     @clients = Client.all
+    render json: { status: :success, clients: @clients.as_json(include: :custom_fields) }
   end
 
   # GET /clients/1 or /clients/1.json
@@ -17,21 +18,6 @@ class ClientsController < ApplicationController
 
   # GET /clients/1/edit
   def edit
-  end
-
-  # POST /clients or /clients.json
-  def create
-    @client = Client.new(client_params)
-
-    respond_to do |format|
-      if @client.save
-        format.html { redirect_to @client, notice: "Client was successfully created." }
-        format.json { render :show, status: :created, location: @client }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @client.errors, status: :unprocessable_entity }
-      end
-    end
   end
 
   # PATCH/PUT /clients/1 or /clients/1.json
