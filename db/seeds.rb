@@ -4,83 +4,83 @@
 
 custom_field_examples = [
   {
-    name: 'type of walkway',
+    name: 'type_of_walkway',
     field_type: :enum_type,
     enum_options: :'brick,concrete,none'
   },
   {
-    name: 'size of fridge',
+    name: 'size_of_fridge',
     field_type: :enum_type,
     enum_options: :'small,medium,large'
   },
   {
-    name: 'living room floor material',
+    name: 'living_room_floor_material',
     field_type: :enum_type,
     enum_options: :'hardwood,carpet,tile'
   },
   {
-    name: 'living room color',
+    name: 'living_room_color',
     field_type: :string
   },
   {
-    name: 'school district',
+    name: 'school_district',
     field_type: :string
   },
   {
-    name: 'kitchen paint color',
+    name: 'kitchen_paint_color',
     field_type: :string
   },
   {
-    name: 'nickname of resident poltergeist',
+    name: 'nickname_of_resident_poltergeist',
     field_type: :string
   },
   {
-    name: 'number of bathrooms',
+    name: 'number_of_bathrooms',
     field_type: :number
   },
   {
-    name: 'number of sinks',
+    name: 'number_of_sinks',
     field_type: :number
   },
   {
-    name: 'number of staircases',
+    name: 'number_of_staircases',
     field_type: :number
   },
   {
-    name: 'size of kitchen (square ft.)',
+    name: 'size_of_kitchen_(square_ft.)',
     field_type: :number
   },
   {
-    name: 'number of bedrooms',
+    name: 'number_of_bedrooms',
     field_type: :number
   },
   {
-    name: 'backyard size (square ft.)',
+    name: 'backyard_size_(square_ft.)',
     field_type: :number
   },
   {
-    name: 'garage size (square ft.)',
+    name: 'garage_size_(square_ft.)',
     field_type: :number
   },
   {
-    name: 'roof material',
+    name: 'roof_material',
     field_type: :string
   },
   {
-    name: 'number of windows',
+    name: 'number_of_windows',
     field_type: :number
   },
   {
-    name: 'swimming pool',
+    name: 'swimming_pool',
     field_type: :enum_type,
     enum_options: :'above_ground,installed,none'
   },
   {
-    name: 'number of floors',
+    name: 'number_of_floors',
     field_type: :number
   },
   {
-    name: 'attic size (square ft.)',
+    name: 'attic_size_(square_ft.)',
     field_type: :number
   }
 ]

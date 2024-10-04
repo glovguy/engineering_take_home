@@ -1,9 +1,28 @@
 class BuildingsController < ApplicationController
   before_action :set_building, only: %i[ show edit update destroy ]
 
-  # GET /buildings or /buildings.json
   def index
-    @buildings = Building.all
+    # in a real app I would likely use a pagination gem
+    page = params[:page].to_i || 1
+    per_page = 10
+    @buildings = Building.offset((page - 1) * per_page).limit(per_page)
+    respond_to do |format|
+      format.json do
+        buildings_hashes = @buildings.map do |building|
+          cfvs = building.custom_field_values
+          cf_hash = {}
+          cfvs.each { |cfv| cf_hash[cfv.custom_field.name] = cfv.value }
+          {
+            id: building.id,
+            client_name: building.client.name,
+            address: building.address,
+            **cf_hash
+          }
+        end
+        render json: { status: :success, buildings: buildings_hashes }
+      end
+      format.html 
+    end
   end
 
   # GET /buildings/1 or /buildings/1.json
