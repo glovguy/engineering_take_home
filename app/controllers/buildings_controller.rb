@@ -1,11 +1,12 @@
 class BuildingsController < ApplicationController
+  skip_forgery_protection # get rid of csrf errors
   before_action :set_building, only: %i[ show edit update destroy ]
 
   def index
     # in a real app I would likely use a pagination gem
     page = params[:page].to_i || 1
     per_page = 10
-    @buildings = Building.offset((page - 1) * per_page).limit(per_page)
+    @buildings = Building.order(id: :asc).offset((page - 1) * per_page).limit(per_page)
     respond_to do |format|
       format.json do
         buildings_hashes = @buildings.map do |building|
@@ -55,14 +56,10 @@ class BuildingsController < ApplicationController
 
   # PATCH/PUT /buildings/1 or /buildings/1.json
   def update
-    respond_to do |format|
-      if @building.update(building_params)
-        format.html { redirect_to @building, notice: "Building was successfully updated." }
-        format.json { render :show, status: :ok, location: @building }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @building.errors, status: :unprocessable_entity }
-      end
+    if @building.update_with_custom_fields(building_params)
+      render json: { status: :success }
+    else
+      render json: @building.errors, status: :unprocessable_entity
     end
   end
 
@@ -84,6 +81,6 @@ class BuildingsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def building_params
-      params.require(:building).permit(:address, :state_code, :zipcode)
+      params.require(:building).permit!.except(:id, :client_name)
     end
 end

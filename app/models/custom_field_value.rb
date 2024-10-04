@@ -3,6 +3,7 @@ class CustomFieldValue < ApplicationRecord
   belongs_to :building
 
   validates :value, presence: true
+  validate :value_matches_field_type
 
   def typed_value
     case custom_field.field_type.to_sym
@@ -22,8 +23,12 @@ class CustomFieldValue < ApplicationRecord
   def value_matches_field_type
     case custom_field.field_type.to_sym
     when :number
-      errors.add(:value, "must be a number") unless value.to_f.to_s == value
-    when :enum
+      begin
+        Float(value)
+      rescue ArgumentError, TypeError
+        errors.add(:value, "must be a number")
+      end
+    when :enum_type
       errors.add(:value, "is not a valid option") unless custom_field.enum_options_array.include?(value)
     end
   end
