@@ -122,7 +122,7 @@ end
   client.reload
   
   # Seed buildings for each client
-  5.times do |i|
+  15.times do |i|
     building = Building.find_or_create_by!(
       address: "#{i+1}#{i+1}#{i+1} main st.",
       state_code: 'NY',

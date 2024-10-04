@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_10_04_002822) do
+ActiveRecord::Schema[7.2].define(version: 2024_10_04_021035) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -37,7 +37,9 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_04_002822) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["building_id"], name: "index_custom_field_values_on_building_id"
+    t.index ["custom_field_id", "building_id"], name: "index_custom_field_values_on_custom_field_id_and_building_id"
     t.index ["custom_field_id"], name: "index_custom_field_values_on_custom_field_id"
+    t.index ["value"], name: "index_custom_field_values_on_value"
   end
 
   create_table "custom_fields", force: :cascade do |t|
