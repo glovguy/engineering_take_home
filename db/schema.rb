@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_10_03_202657) do
+ActiveRecord::Schema[7.2].define(version: 2024_10_04_002822) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -30,5 +30,28 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_03_202657) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "custom_field_values", force: :cascade do |t|
+    t.bigint "custom_field_id", null: false
+    t.bigint "building_id", null: false
+    t.text "value"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["building_id"], name: "index_custom_field_values_on_building_id"
+    t.index ["custom_field_id"], name: "index_custom_field_values_on_custom_field_id"
+  end
+
+  create_table "custom_fields", force: :cascade do |t|
+    t.string "name"
+    t.string "field_type"
+    t.bigint "client_id", null: false
+    t.text "enum_options"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["client_id"], name: "index_custom_fields_on_client_id"
+  end
+
   add_foreign_key "buildings", "clients"
+  add_foreign_key "custom_field_values", "buildings"
+  add_foreign_key "custom_field_values", "custom_fields"
+  add_foreign_key "custom_fields", "clients"
 end
